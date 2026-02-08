@@ -1,5 +1,38 @@
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+
+# Prefer a GUI backend for interactive display; fall back silently
+try:
+    matplotlib.use('Qt5Agg')
+except Exception:
+    try:
+        matplotlib.use('TkAgg')
+    except Exception:
+        pass
+
+# Directory where plot images will be saved for headless environments
+OUT_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'out')
+os.makedirs(OUT_DIR, exist_ok=True)
+
+# Helper to decide whether to show or save
+def _show_or_save(fig_name):
+    # If there's no X11 DISPLAY, avoid blocking show(); save instead.
+    has_x_display = bool(os.environ.get('DISPLAY'))
+    backend = matplotlib.get_backend().lower()
+    interactive_prefixes = ('qt', 'tk', 'wx', 'macosx')
+    if has_x_display and backend.startswith(interactive_prefixes):
+        try:
+            plt.show()
+            return f"shown (backend={matplotlib.get_backend()})"
+        except Exception:
+            pass
+    # fallback: save
+    path = os.path.join(OUT_DIR, fig_name)
+    plt.savefig(path, bbox_inches='tight')
+    plt.clf()
+    return path
 
 def show_dashboard(data, result_value, config):
     """
@@ -25,7 +58,11 @@ def show_dashboard(data, result_value, config):
     plt.xlabel('GDP (US$)')
     plt.grid(axis='x', linestyle='--', alpha=0.5)
     plt.tight_layout()
-    plt.show()
+    result = _show_or_save(f'01_bar_{region}_{year}.png')
+    if result.startswith('shown'):
+        print(f'      Shown: {result}')
+    else:
+        print(f'      Saved: {result}')
 
     # 2. Histogram
     print("   -> Opening Graph 2/4: Histogram...")
@@ -36,7 +73,11 @@ def show_dashboard(data, result_value, config):
     plt.ylabel('Count of Countries')
     plt.grid(axis='y', linestyle='--', alpha=0.5)
     plt.tight_layout()
-    plt.show()
+    result = _show_or_save(f'02_hist_{region}_{year}.png')
+    if result.startswith('shown'):
+        print(f'      Shown: {result}')
+    else:
+        print(f'      Saved: {result}')
 
     # 3. Dot Plot
     print("   -> Opening Graph 3/4: Dot Plot...")
@@ -47,7 +88,11 @@ def show_dashboard(data, result_value, config):
     plt.xlabel('GDP (US$)')
     plt.grid(axis='x', linestyle='--', alpha=0.5)
     plt.tight_layout()
-    plt.show()
+    result = _show_or_save(f'03_dot_{region}_{year}.png')
+    if result.startswith('shown'):
+        print(f'      Shown: {result}')
+    else:
+        print(f'      Saved: {result}')
 
     # 4. Pie Chart + Stats
     print("   -> Opening Graph 4/4: Pie Chart & Final Report...")
@@ -84,4 +129,8 @@ def show_dashboard(data, result_value, config):
                 bbox={"facecolor":"#fff8dc", "edgecolor":"orange", "boxstyle":"round,pad=1"})
     
     plt.tight_layout(rect=[0, 0.15, 1, 1])
-    plt.show()
+    result = _show_or_save(f'04_pie_{region}_{year}.png')
+    if result.startswith('shown'):
+        print(f'      Shown: {result}')
+    else:
+        print(f'      Saved: {result}')

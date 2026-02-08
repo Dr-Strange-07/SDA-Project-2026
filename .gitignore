@@ -2,3 +2,7 @@ pycache/
 *.py[cod]
 .vscode/
 .env
+
+# Ignore virtualenv and generated images
+.venv
+out/
