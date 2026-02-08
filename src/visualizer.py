@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 def show_dashboard(data, result_value, config):
     """
@@ -64,7 +65,14 @@ def show_dashboard(data, result_value, config):
         top_values = gdp_values
 
     plt.figure(figsize=(10, 9))
-    plt.pie(top_values, labels=top_countries, autopct='%1.1f%%', startangle=140, colors=plt.cm.coolwarm.colors)
+    
+    # FIXED: Using a safe colormap 'Paired' which has .colors attribute
+    # If using newer matplotlib where .colors might differ, we use a manual list generator
+    # Safe approach: generate colors from a colormap
+    cmap = plt.get_cmap('Paired')
+    colors = [cmap(i) for i in np.linspace(0, 1, len(top_values))]
+
+    plt.pie(top_values, labels=top_countries, autopct='%1.1f%%', startangle=140, colors=colors)
     plt.title(f'4. GDP Market Share', fontsize=14)
     
     # Final Stats Box
