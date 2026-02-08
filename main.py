@@ -11,8 +11,9 @@ from src.visualizer import show_dashboard
 
 # Constants
 CONFIG_FILE = 'config.json'
-# Path to data folder
-DATA_FILE = os.path.join('data', 'gdp_dataset.csv')
+
+# --- UPDATE: Ab hum FIXED wali file use kar rahe hain ---
+DATA_FILE = os.path.join('data', 'gdp_dataset_fixed.csv') 
 
 def load_config():
     """Loads configuration settings from JSON file."""
@@ -36,8 +37,10 @@ def main():
         
         # 2. Load Data
         print(f"\nStep 2: Loading Dataset from '{DATA_FILE}'...")
+        
         if not os.path.exists(DATA_FILE):
              print(f"\n[ERROR] File not found: {DATA_FILE}")
+             print("Did you run 'fix_csv.py'? It creates this fixed file.")
              return
 
         df = load_data(DATA_FILE)
