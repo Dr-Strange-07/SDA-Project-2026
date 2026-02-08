@@ -11,7 +11,8 @@ try:
     print("Trying to fix the file...")
     
     # Hum Excel engine se padhne ki koshish karenge bhale hi extension .csv ho
-    df = pd.read_excel(wrong_file)
+    # Added engine='openpyxl' to force it to read as Excel
+    df = pd.read_excel(wrong_file, engine='openpyxl')
     
     # Ab sahi CSV format mein save karenge
     df.to_csv(correct_file, index=False)
