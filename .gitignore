@@ -5,4 +5,4 @@ pycache/
 
 # Ignore virtualenv and generated images
 .venv
-out/
+# out/ removed intentionally to allow committing generated images
