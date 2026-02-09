@@ -3,36 +3,34 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-# Prefer a GUI backend for interactive display; fall back silently
-try:
-    matplotlib.use('Qt5Agg')
-except Exception:
-    try:
-        matplotlib.use('TkAgg')
-    except Exception:
-        pass
+# Force interactive backend BEFORE importing pyplot
+matplotlib.use('Agg')  # Use Agg for non-GUI environments initially
 
 # Directory where plot images will be saved for headless environments
 OUT_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'out')
 os.makedirs(OUT_DIR, exist_ok=True)
 
-# Helper to decide whether to show or save
+# Helper to save and display graphs one by one
 def _show_or_save(fig_name):
-    # If there's no X11 DISPLAY, avoid blocking show(); save instead.
-    has_x_display = bool(os.environ.get('DISPLAY'))
-    backend = matplotlib.get_backend().lower()
-    interactive_prefixes = ('qt', 'tk', 'wx', 'macosx')
-    if has_x_display and backend.startswith(interactive_prefixes):
-        try:
-            plt.show()
-            return f"shown (backend={matplotlib.get_backend()})"
-        except Exception:
-            pass
-    # fallback: save
+    """Save figure and open it with system viewer, waiting for user to close"""
     path = os.path.join(OUT_DIR, fig_name)
-    plt.savefig(path, bbox_inches='tight')
-    plt.clf()
-    return path
+    plt.savefig(path, bbox_inches='tight', dpi=100)
+    plt.close('all')
+    
+    # Try to open with system image viewer and wait for it to close
+    try:
+        import subprocess
+        print(f"      Opening image: {path}")
+        # Use 'xdg-open' on Linux, 'open' on macOS, 'start' on Windows
+        if os.name == 'posix':  # Linux/macOS
+            subprocess.Popen(['xdg-open', path]).wait()
+        else:  # Windows
+            os.startfile(path)
+        return f"shown (saved to {path})"
+    except Exception as e:
+        print(f"      Could not open with system viewer: {e}")
+        print(f"      Saved to: {path}")
+        return path
 
 def show_dashboard(data, result_value, config):
     """
