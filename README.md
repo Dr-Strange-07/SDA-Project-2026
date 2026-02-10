@@ -4,7 +4,7 @@ A comprehensive data analysis and visualization system for global GDP statistics
 
 **Group Members:** 
 - Umair Amjad
-- Ali Khan Lodhi
+- Muhammad Ali
 
 ---
 
