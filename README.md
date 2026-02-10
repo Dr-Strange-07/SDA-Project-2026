@@ -345,7 +345,7 @@ show_dashboard(data: DataFrame, result_value: float, config: dict) -> None
 ## Contributors
 
 - **Umair Amjad** - Co-Developer
-- **Ali Khan Lodhi** - Co-Developer
+- **Muhammad Ali** - Co-Developer
 
 ---
 
