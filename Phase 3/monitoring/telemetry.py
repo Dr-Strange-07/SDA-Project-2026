@@ -5,7 +5,6 @@ from typing import Dict, List
 
 from core.contracts import TelemetryObserver
 
-
 class PipelineTelemetry:
     """
     Subject in Observer pattern.
