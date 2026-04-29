@@ -6,8 +6,8 @@ from typing import Dict
 from core.aggregator import ResequencingAggregator
 from core.workers import StatelessVerifierWorker
 from monitoring.telemetry import PipelineTelemetry
-from plugins.inputs import GenericInputProducer
-from plugins.outputs import RealTimeDashboard
+from plugins.input import GenericInputProducer
+from plugins.output import RealTimeDashboard
 
 
 def _input_entry(input_component: GenericInputProducer) -> None:
